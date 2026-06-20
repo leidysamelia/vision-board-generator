@@ -1,15 +1,13 @@
 /* ============================================================
    Vision Board Generator — Hoja de estilos principal
-   Paleta: pasteles suaves, tipografía limpia, ADHD-friendly
+   Temas: feminine (pasteles) | masculine (profundo & natural)
    ============================================================ */
 
-/* ── Variables globales ─────────────────────────────────── */
+/* ── Variables: Tema Femenino (default) ─────────────────────── */
 :root {
-  /* Colores base */
   --cream:        #FFFCF8;
   --white:        #FFFFFF;
 
-  /* Pasteles */
   --pink:         #FFE8F2;
   --mint:         #E8FFF4;
   --sky:          #E8F4FF;
@@ -17,38 +15,66 @@
   --peach:        #FFE8D8;
   --yellow:       #FFFAE0;
 
-  /* Acento principal (gradiente primario) */
   --accent-a:     #B07FE8;
   --accent-b:     #E879A4;
 
-  /* Texto */
   --text-900:     #1E1628;
   --text-600:     #5A4A68;
   --text-400:     #9E8EAC;
   --text-200:     #D4C8DC;
 
-  /* Bordes y superficies */
   --surface:      rgba(255,255,255,0.85);
   --border:       rgba(160,120,200,0.12);
 
-  /* Radios */
+  --bg-gradient:  linear-gradient(145deg, #FFF5FC 0%, #F7F0FF 45%, #F0F8FF 80%, #F0FFFA 100%);
+  --bg-welcome:   linear-gradient(145deg, #FFF5FC 0%, #F7F0FF 45%, #F0F8FF 80%, #F0FFFA 100%);
+
   --r-sm:  10px;
   --r-md:  18px;
   --r-lg:  28px;
   --r-xl:  44px;
   --r-full: 999px;
 
-  /* Sombras */
   --shadow-card:  0 8px 40px rgba(100,60,140,0.08);
   --shadow-float: 0 4px 20px rgba(100,60,140,0.12);
   --shadow-btn:   0 4px 18px rgba(160,80,200,0.22);
 
-  /* Transiciones */
   --t-fast:   0.18s ease;
   --t-smooth: 0.38s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Reset mínimo ───────────────────────────────────────── */
+/* ── Variables: Tema Masculino ──────────────────────────────── */
+[data-theme="masculine"] {
+  --cream:        #F4F7F9;
+  --white:        #FFFFFF;
+
+  --pink:         #D6EAF8;
+  --mint:         #D5F5E3;
+  --sky:          #EBF5FB;
+  --lavender:     #D6EAF8;
+  --peach:        #FDFEFE;
+  --yellow:       #EBF5FB;
+
+  --accent-a:     #1B4F72;
+  --accent-b:     #1E8449;
+
+  --text-900:     #0D1B2A;
+  --text-600:     #2C4A6E;
+  --text-400:     #5D7A94;
+  --text-200:     #A8C0D4;
+
+  --surface:      rgba(255,255,255,0.90);
+  --border:       rgba(27,79,114,0.12);
+
+  --bg-gradient:  linear-gradient(145deg, #EBF5FB 0%, #E8F8F5 45%, #EAF4F4 80%, #F0F4F8 100%);
+  --bg-welcome:   linear-gradient(145deg, #EBF5FB 0%, #E8F8F5 45%, #EAF4F4 80%, #F0F4F8 100%);
+
+  --shadow-card:  0 8px 40px rgba(27,79,114,0.09);
+  --shadow-float: 0 4px 20px rgba(27,79,114,0.12);
+  --shadow-btn:   0 4px 18px rgba(27,79,114,0.28);
+}
+
+/* ── Reset mínimo ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
@@ -62,10 +88,10 @@ body {
   background: var(--cream);
   color: var(--text-900);
   min-height: 100vh;
-  overflow: hidden;           /* las pantallas ocupan 100vh cada una */
+  overflow: hidden;
 }
 
-/* ── Gestión de pantallas ───────────────────────────────── */
+/* ── Gestión de pantallas ───────────────────────────────────── */
 .screen {
   position: fixed;
   inset: 0;
@@ -75,13 +101,11 @@ body {
   transition: opacity var(--t-smooth), transform var(--t-smooth);
   overflow-y: auto;
 }
-
 .screen.active {
   opacity: 1;
   pointer-events: all;
   transform: translateY(0);
 }
-
 .screen.exiting {
   opacity: 0;
   transform: translateY(-16px);
@@ -90,24 +114,33 @@ body {
 
 
 /* ============================================================
-   PANTALLA 1: BIENVENIDA
+   PANTALLA 0 & ELEMENTOS COMPARTIDOS: BIENVENIDA / GÉNERO
    ============================================================ */
 
-#welcome-screen {
+#gender-screen,
+#wizard-screen,
+#board-screen,
+#interests-screen {
+  background: var(--bg-gradient);
+}
+
+#gender-screen {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, #FFF5FC 0%, #F7F0FF 45%, #F0F8FF 80%, #F0FFFA 100%);
   overflow: hidden;
 }
 
-/* Anillos decorativos de fondo */
+/* Anillos decorativos */
 .deco-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 
 .deco-ring {
   position: absolute;
   border-radius: 50%;
   border: 1.5px solid rgba(180,140,220,0.15);
+}
+[data-theme="masculine"] .deco-ring {
+  border-color: rgba(27,79,114,0.12);
 }
 .deco-ring--1 {
   width: 520px; height: 520px;
@@ -127,7 +160,6 @@ body {
   transform: translate(-50%,-50%);
   animation: pulse-ring 6s ease-in-out 3s infinite;
 }
-
 @keyframes pulse-ring {
   0%, 100% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
   50%       { opacity: 0.2; transform: translate(-50%,-50%) scale(1.04); }
@@ -136,18 +168,15 @@ body {
 /* Ilustraciones SVG */
 .botanical-illo {
   position: absolute;
-  bottom: -10px;
-  right: -10px;
+  bottom: -10px; right: -10px;
   width: clamp(160px, 26vw, 280px);
   opacity: 0.75;
   pointer-events: none;
   z-index: 0;
 }
 .botanical-illo--tl {
-  bottom: auto;
-  right: auto;
-  top: -10px;
-  left: -10px;
+  bottom: auto; right: auto;
+  top: -10px; left: -10px;
   transform: rotate(180deg);
   opacity: 0.5;
 }
@@ -158,7 +187,7 @@ body {
   z-index: 1;
   text-align: center;
   padding: 2rem;
-  max-width: 500px;
+  max-width: 560px;
   width: 100%;
 }
 
@@ -196,27 +225,59 @@ body {
   margin-bottom: 2rem;
 }
 
-/* Chips de pasos */
-.steps-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-bottom: 2.5rem;
+/* ── Selector de género ─────────────────────────────────────── */
+.gender-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-400);
+  margin-bottom: 1rem;
 }
 
-.chip {
-  font-size: 0.8rem;
-  font-weight: 500;
-  padding: 0.35rem 0.85rem;
-  border-radius: var(--r-full);
-  white-space: nowrap;
+.gender-cards {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
-.chip--blue   { background: var(--sky);      color: #3A6EAA; }
-.chip--green  { background: var(--mint);     color: #2D8A5A; }
-.chip--purple { background: var(--lavender); color: #6A3AAA; }
-.chip--peach  { background: var(--peach);    color: #AA5A2D; }
-.chip--pink   { background: var(--pink);     color: #AA2D6A; }
+
+.gender-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 2rem;
+  border-radius: var(--r-lg);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: transform var(--t-fast), box-shadow var(--t-fast), border-color var(--t-fast);
+  min-width: 140px;
+  box-shadow: var(--shadow-float);
+  font-family: inherit;
+}
+.gender-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+  border-color: var(--accent-a);
+}
+.gender-card.is-selected {
+  border-color: var(--accent-a);
+  background: var(--lavender);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-a) 15%, transparent);
+}
+.gender-card__icon { font-size: 2.2rem; line-height: 1; }
+.gender-card__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-900);
+}
+.gender-card__desc {
+  font-size: 0.75rem;
+  color: var(--text-400);
+}
 
 .welcome-actions {
   display: flex;
@@ -245,14 +306,12 @@ body {
   line-height: 1;
   white-space: nowrap;
 }
-
 .btn:disabled {
   opacity: 0.38;
   cursor: not-allowed;
   transform: none !important;
   box-shadow: none !important;
 }
-
 .btn--primary {
   background: linear-gradient(135deg, var(--accent-a) 0%, var(--accent-b) 100%);
   color: #fff;
@@ -260,7 +319,7 @@ body {
 }
 .btn--primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(160,80,200,0.30);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--accent-a) 40%, transparent);
 }
 .btn--primary:active:not(:disabled) { transform: translateY(0); }
 
@@ -273,45 +332,161 @@ body {
   transform: translateY(-2px);
   box-shadow: var(--shadow-card);
 }
-
 .btn--ghost {
   background: transparent;
   color: var(--text-400);
 }
 .btn--ghost:hover:not(:disabled) {
-  background: rgba(160,120,200,0.07);
+  background: color-mix(in srgb, var(--accent-a) 8%, transparent);
   color: var(--text-600);
+}
+
+
+/* ============================================================
+   PANTALLA 1: SELECTOR DE INTERESES
+   ============================================================ */
+#interests-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interests-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 620px;
+  padding: 2rem 1.5rem;
+}
+
+.interests-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.interests-title {
+  font-size: clamp(1.3rem, 4vw, 1.7rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-900);
+  margin-bottom: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.interests-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-600);
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.interests-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-400);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  padding: 0.3rem 0.9rem;
+  transition: color var(--t-fast);
+}
+.interests-counter.is-complete {
+  color: var(--accent-b);
+  border-color: var(--accent-b);
+}
+
+#interests-count {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--accent-a);
+}
+
+/* Grid de intereses */
+.interests-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 1.75rem;
+}
+
+.interest-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.85rem 0.5rem;
+  border-radius: var(--r-md);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  font-family: inherit;
+  text-align: center;
+  box-shadow: var(--shadow-float);
+}
+.interest-chip:hover:not(.is-disabled) {
+  transform: translateY(-2px);
+  border-color: var(--accent-a);
+  box-shadow: var(--shadow-card);
+}
+.interest-chip.is-selected {
+  background: var(--lavender);
+  border-color: var(--accent-a);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-a) 15%, transparent);
+}
+.interest-chip.is-disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  transform: none;
+}
+.interest-chip__icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.interest-chip__name {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-600);
+  line-height: 1.2;
+}
+.interest-chip.is-selected .interest-chip__name {
+  color: var(--accent-a);
+}
+
+.interests-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 
 /* ============================================================
    PANTALLA 2: WIZARD
    ============================================================ */
-
 #wizard-screen {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, #FFF5FC 0%, #F7F0FF 45%, #F0F8FF 80%, #F0FFFA 100%);
 }
 
-/* Decoraciones de fondo del wizard */
 .wizard-deco {
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 0;
 }
-
 .wizard-glow {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%,-50%);
   width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(192,130,252,0.10) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent-a) 10%, transparent) 0%, transparent 70%);
   border-radius: 50%;
 }
-
 .wizard-dot {
   position: absolute;
   border-radius: 50%;
@@ -323,13 +498,11 @@ body {
 .wizard-dot--2 { width: 9px;  height: 9px;  top: 72%;  left: 8%;   animation-delay: 1.2s; }
 .wizard-dot--3 { width: 12px; height: 12px; top: 20%;  right: 10%; animation-delay: 0.6s; }
 .wizard-dot--4 { width: 7px;  height: 7px;  top: 78%;  right: 14%; animation-delay: 1.8s; }
-
 @keyframes float-dot {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-12px); }
 }
 
-/* Contenedor principal */
 .wizard-container {
   position: relative;
   z-index: 1;
@@ -338,15 +511,17 @@ body {
   padding: 1.5rem 1.5rem 2rem;
 }
 
-/* Barra de progreso */
-.wizard-header { margin-bottom: 2rem; }
+.wizard-header { margin-bottom: 1.25rem; text-align: center; }
 
 .progress-bar {
   height: 4px;
   background: rgba(160,120,200,0.12);
   border-radius: 2px;
   overflow: hidden;
-  margin-bottom: 1rem;
+  margin: 0.75rem 0 1rem;
+}
+[data-theme="masculine"] .progress-bar {
+  background: rgba(27,79,114,0.12);
 }
 .progress-fill {
   height: 100%;
@@ -355,7 +530,6 @@ body {
   transition: width var(--t-smooth);
   width: 0%;
 }
-
 .progress-dots {
   display: flex;
   gap: 0.5rem;
@@ -364,7 +538,7 @@ body {
 .dot {
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: rgba(160,120,200,0.18);
+  background: color-mix(in srgb, var(--accent-a) 18%, transparent);
   transition: all var(--t-smooth);
 }
 .dot.is-active {
@@ -373,7 +547,6 @@ body {
 }
 .dot.is-done {
   background: var(--accent-b);
-  transform: scale(1);
 }
 
 /* Tarjeta de pregunta */
@@ -386,7 +559,7 @@ body {
   padding: 2.25rem 2rem 1.75rem;
   box-shadow: var(--shadow-card);
   margin-bottom: 1.5rem;
-  min-height: 300px;
+  min-height: 280px;
   transition: opacity var(--t-smooth), transform var(--t-smooth);
 }
 .question-card.is-exiting {
@@ -396,7 +569,6 @@ body {
 .question-card.is-entering {
   animation: slide-in var(--t-smooth) forwards;
 }
-
 @keyframes slide-in {
   from { opacity: 0; transform: translateX(28px); }
   to   { opacity: 1; transform: translateX(0); }
@@ -407,7 +579,6 @@ body {
   margin-bottom: 0.6rem;
   line-height: 1;
 }
-
 .question-label {
   font-size: 0.72rem;
   font-weight: 700;
@@ -416,18 +587,15 @@ body {
   color: var(--text-400);
   margin-bottom: 0.6rem;
 }
-
 .question-prompt {
-  font-size: clamp(1.2rem, 3.5vw, 1.55rem);
+  font-size: clamp(1.1rem, 3.5vw, 1.45rem);
   font-weight: 700;
   color: var(--text-900);
-  line-height: 1.3;
+  line-height: 1.35;
   margin-bottom: 1.5rem;
 }
 
-/* Campo de respuesta */
 .input-wrapper { position: relative; }
-
 .answer-field {
   width: 100%;
   border: 2px solid var(--border);
@@ -442,7 +610,7 @@ body {
 }
 .answer-field:focus {
   border-color: var(--accent-a);
-  box-shadow: 0 0 0 4px rgba(176,127,232,0.12);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-a) 12%, transparent);
 }
 .answer-field::placeholder { color: var(--text-200); }
 
@@ -454,7 +622,6 @@ body {
   transition: color var(--t-fast);
 }
 .char-counter.is-warn { color: var(--accent-b); }
-
 .question-hint {
   font-size: 0.8rem;
   color: var(--text-400);
@@ -462,7 +629,6 @@ body {
   line-height: 1.5;
 }
 
-/* Navegación del wizard */
 .wizard-nav {
   display: flex;
   justify-content: space-between;
@@ -474,9 +640,8 @@ body {
 /* ============================================================
    PANTALLA 3: BOARD
    ============================================================ */
-
 #board-screen {
-  background: linear-gradient(145deg, #FFF5FC 0%, #F7F0FF 45%, #F0F8FF 80%, #F0FFFA 100%);
+  overflow-y: auto;
 }
 
 .board-container {
@@ -485,9 +650,7 @@ body {
   padding: 2rem 1.5rem 3rem;
   text-align: center;
 }
-
 .board-header { margin-bottom: 1.5rem; padding-top: 1rem; }
-
 .board-header__badge {
   display: inline-block;
   font-size: 0.72rem;
@@ -499,20 +662,17 @@ body {
   border-radius: var(--r-full);
   margin-bottom: 0.75rem;
 }
-
 .board-header__title {
   font-size: clamp(1.6rem, 5vw, 2.2rem);
   font-weight: 800;
   letter-spacing: -0.03em;
   margin-bottom: 0.35rem;
 }
-
 .board-header__sub {
   font-size: 0.95rem;
   color: var(--text-400);
 }
 
-/* Canvas */
 .canvas-wrapper {
   background: var(--white);
   border-radius: var(--r-lg);
@@ -527,7 +687,6 @@ body {
   height: auto;
 }
 
-/* Acciones */
 .board-actions {
   display: flex;
   gap: 0.75rem;
@@ -539,7 +698,6 @@ body {
 /* ============================================================
    OVERLAY: PANTALLA COMPLETA
    ============================================================ */
-
 .fullscreen-overlay {
   position: fixed;
   inset: 0;
@@ -561,11 +719,9 @@ body {
   max-height: 100%;
   border-radius: var(--r-sm);
 }
-
 .close-fs-btn {
   position: fixed;
-  top: 1.25rem;
-  right: 1.25rem;
+  top: 1.25rem; right: 1.25rem;
   background: rgba(255,255,255,0.12);
   border: none;
   color: rgba(255,255,255,0.8);
@@ -579,7 +735,6 @@ body {
   backdrop-filter: blur(8px);
 }
 .close-fs-btn:hover { background: rgba(255,255,255,0.22); }
-
 .fullscreen-hint {
   position: fixed;
   bottom: 1.5rem;
@@ -595,25 +750,25 @@ body {
 /* ============================================================
    RESPONSIVE — móvil
    ============================================================ */
-
 @media (max-width: 600px) {
+  .interests-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
   .question-card { padding: 1.75rem 1.4rem 1.4rem; }
-
   .wizard-nav {
     flex-direction: column-reverse;
     align-items: stretch;
   }
   .wizard-nav .btn { justify-content: center; }
-
   .board-actions {
     flex-direction: column;
     align-items: stretch;
   }
   .board-actions .btn { justify-content: center; }
-
-  .welcome-title { letter-spacing: -0.03em; }
+  .gender-cards { flex-direction: column; align-items: center; }
+  .gender-card { width: 100%; max-width: 260px; flex-direction: row; text-align: left; }
 }
 
 @media (max-width: 380px) {
-  .steps-chips .chip { font-size: 0.72rem; padding: 0.3rem 0.65rem; }
+  .interests-grid { grid-template-columns: repeat(2, 1fr); }
 }
